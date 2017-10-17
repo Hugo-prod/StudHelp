@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block dashboard %}class="active"{% endblock %}
+
+{% block content %}
+
+<section class="section">
+	<div class="row">
+		<div class="col">
+			<div class="card">
+				<div class="card-block">
+					<div class="card-title-block">
+						<div class="row">
+							<div class="col">
+								<h3 class="title"> Disciplines </h3>
+								<p class="title-description">Liste des disciplines récemment consultées</p>
+							</div>
+							<div class="col">
+								<div class="text-right">
+									<a class="btn btn-sm btn-primary" href="{% url 'core:create_discipline' %}" title="Créer une discipline">Créer une discipline</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<section class="example">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead class="flip-header">
+									<tr>
+										<th>ID</th>
+										<th>Discipline</th>
+										<th>Documents</th>
+										<th>Vues</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for discipline in recent_disciplines %}
+									<tr>
+										<td>{{ discipline.pk }}</td>
+										<td><a href="{% url 'core:all_document_by_discipline' discipline.pk %}">{{ discipline.name }}</a></td>
+										<td>{{ discipline.get_nb_documents }}</td>
+										<td>{{ discipline.views }}</td>
+									</tr>
+								{% empty %}
+									<tr>
+										<td>...</td>
+										<td>...</td>
+										<td>...</td>
+										<td>...</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card">
+				<div class="card-block">
+					<div class="card-title-block">
+						<div class="row">
+							<div class="col">
+								<h3 class="title"> Documents </h3>
+								<p class="title-description">Liste des documents récemment consultées</p>
+							</div>
+							<div class="col">
+								<div class="text-right">
+									<a class="btn btn-sm btn-primary" href="{% url 'core:create_document' %}" title="Créer un cours">Créer un cours</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<section class="example">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead class="flip-header">
+									<tr>
+										<th>ID</th>
+										<th>Document</th>
+										<th>Chapitres</th>
+										<th>Vues</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for document in recent_documents %}
+									<tr>
+										<td>{{ document.pk }}</td>
+										<td><a href="{% url 'core:detail_document' document.pk %}">{{ document.title }}</a></td>
+										<td>{{ document.get_nb_chapters }}</td>
+										<td>{{ document.views }}</td>
+									</tr>
+								{% empty %}
+									<tr>
+										<td>...</td>
+										<td>...</td>
+										<td>...</td>
+										<td>...</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="section">
+		<div class="row">
+			<div class="col">
+				<div class="card">
+					<div class="card-block">
+						<div class="card-title-block">
+							<h3 class="title"> Statistiques </h3>
+						</div>
+						<section class="example">
+							<div id="morris-donut-chart"></div>
+						</section>
+					</div>
+				</div>
+			</div>
+			{% if top_disciplines %}
+				<div class="col">
+					<div class="card">
+						<div class="card-block">
+							<div class="card-title-block">
+								<h3 class="title"> Top 5 des disciplines </h3>
+								<p class="title-description">Les 5 disciplines les plus consultées</p>
+							</div>
+							<section class="example">
+								<div class="flot-chart">
+									<div class="flot-chart-pie-content" id="flot-pie-chart"></div>
+								</div>
+							</section>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+var data = [
+	{% for discipline in top_disciplines %}
+		{
+			label:'{{ discipline.name }}',
+			data:{{ discipline.views }},
+			color: tinycolor(config.chart.colorPrimary.toString()).lighten({{ forloop.counter }} * 10),
+		},
+	{% endfor %}
+];
+
+var plotObj = $.plot($("#flot-pie-chart"), data, {
+	series: {
+		pie: {
+			show: true
+		}
+	},
+	grid: {
+		hoverable: true
+	},
+	tooltip: true,
+	tooltipOpts: {
+		content: "%p.0%, %s",
+		shifts: {
+			x: 20,
+			y: 0
+		},
+		defaultTheme: false
+	}
+});
+
+$('#morris-donut-chart').empty();
+
+    Morris.Donut({
+        element: 'morris-donut-chart',
+        data: [{ label: "Documents", value: {{ total_documents }} },
+            { label: "Disciplines", value: {{ total_disciplines }} }],
+        resize: true,
+        colors: [
+            tinycolor(config.chart.colorPrimary.toString()).lighten(10).toString(),
+            tinycolor(config.chart.colorPrimary.toString()).darken(10).toString(),
+            config.chart.colorPrimary.toString()
+        ],
+    });
+</script>
+{% endblock %}

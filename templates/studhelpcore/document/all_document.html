@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block cours %}class="active open"{% endblock %}
+
+{% block subtitle %}Documents:{% endblock %}
+
+{% block content %}
+<section class="section">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-block">
+					<div class="card-title-block">
+						<div class="row">
+							<div class="col">
+								<h3 class="title"> Documents </h3>
+								<p class="title-description">Liste de tous les documents ({{ object_list.count }} au total)</p>
+							</div>
+							<div class="col">
+								<div class="text-right">
+									<a class="btn btn-sm btn-primary" href="{% url 'core:create_document' %}" title="Créer un cours">Créer un cours</a>
+									<a class="btn btn-sm btn-primary" href="{% url 'core:create_discipline' %}" title="Créer une discipline">Créer une discipline</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<section class="example">
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead class="flip-header">
+									<tr>
+										<th>ID</th>
+										<th>Document</th>
+										<th>Discipline</th>
+										<th>Chapitres</th>
+										<th>Vues</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for document in object_list %}
+									<tr>
+										<td>{{ document.pk }}</td>
+										<td><a href="{% url 'core:detail_document' document.pk %}">{{ document.title }}</a></td>
+										<td><a href="{% url 'core:all_document_by_discipline' document.discipline_fk.pk %}">{{ document.discipline_fk.name }}</a></td>
+										<td>{{ document.get_nb_chapters }}</td>
+										<td>{{ document.views }}</td>
+										<td>
+											<a class="btn btn-sm btn-primary" href="{% url 'core:detail_document' document.pk %}" title="Voir le document"><i class="fa fa-eye"></i></a>
+											<a class="btn btn-sm btn-warning" href="{% url 'core:update_document' document.pk %}" title="Modifier le document"><i class="fa fa-pencil-square-o"  style="color: white;"></i></a>
+											<a class="btn btn-sm btn-danger" href="{% url 'core:delete_document' document.pk %}" title="Supprimer le document"><i class="fa fa-times"></i></a>
+										</td>
+									</tr>
+								{% empty %}
+									<tr>
+										<td>...</td>
+										<td>...</td>
+										<td>...</td>
+										<td>...</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% include 'pagination.html' %}
+{% endblock %}

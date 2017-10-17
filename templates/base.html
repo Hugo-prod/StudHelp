@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	{% load static %}
+	<link rel="icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+	<link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32" />
+	<link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16" />
+	<link rel="stylesheet" href="{% static 'dist/css/vendor.css' %}">
+	<link rel="stylesheet" href="{% static 'dist/css/app-green.css' %}">
+	{% block meta %}{% endblock %}
+	<title>{% block title %}Stud'Help{% endblock %}</title>
+</head>
+<body>
+<div class="main-wrapper">
+	<div class="app" id="app">
+		<header class="header">
+			<div class="header-block header-block-collapse d-lg-none d-xl-none">
+				<button class="collapse-btn" id="sidebar-collapse-btn">
+					<i class="fa fa-bars"></i>
+				</button>
+			</div>
+			<div class="header-block header-block-search">
+				<form role="search">
+					<div class="input-container">
+						<i class="fa fa-search"></i>
+						<input type="search" placeholder="Rechercher">
+						<div class="underline"></div>
+					</div>
+				</form>
+			</div>
+			<h4>{% block subtitle %}Stud'Help{% endblock %}</h4>
+			<div class="header-block header-block-buttons">
+			</div>
+		</header>
+		<aside class="sidebar">
+			<div class="sidebar-container">
+				<div class="sidebar-header">
+					<div class="brand">
+						<div class="logo">
+							<span class="l l1"></span>
+							<span class="l l2"></span>
+							<span class="l l3"></span>
+							<span class="l l4"></span>
+							<span class="l l5"></span>
+						</div> Stud'Help </div>
+				</div>
+				<nav class="menu">
+					<ul class="sidebar-menu metismenu" id="sidebar-menu">
+						<li {% block dashboard %}{% endblock %}>
+							<a href="/">
+								<i class="fa fa-home"></i> Dashboard </a>
+						</li>
+						<li {% block discipline %}{% endblock %}>
+							<a href="">
+								<i class="fa fa-inbox"></i> Disciplines
+								<i class="fa arrow"></i>
+							</a>
+							<ul class="sidebar-nav">
+								<li>
+									<a href="{% url 'core:create_discipline' %}">
+										<i class="fa fa-pencil"></i> Créer </a>
+								</li>
+								<li>
+									<a href="{% url 'core:all_discipline' %}">
+										<i class="fa fa-sort-alpha-asc"></i> Toutes les disciplines </a>
+								</li>
+							</ul>
+						</li>
+						<li {% block cours %}{% endblock %}>
+							<a href="">
+								<i class="fa fa-book"></i> Cours
+								<i class="fa arrow"></i>
+							</a>
+							<ul class="sidebar-nav">
+								<li>
+									<a href="{% url 'core:create_document' %}">
+										<i class="fa fa-pencil"></i> Créer </a>
+								</li>
+								<li>
+									<a href="{% url 'core:all_recent_documents' %}">
+										<i class="fa fa-clock-o"></i> Récemment consultées </a>
+								</li>
+								<li>
+									<a href="{% url 'core:all_document' %}">
+										<i class="fa fa-sort-alpha-asc"></i> Tous les cours </a>
+								</li>
+							</ul>
+						</li>
+						{% block sidebar %}{% endblock %}
+					</ul>
+				</nav>
+			</div>
+		</aside>
+		<div class="sidebar-overlay" id="sidebar-overlay"></div>
+		<div class="sidebar-mobile-menu-handle" id="sidebar-mobile-menu-handle"></div>
+		<div class="mobile-menu-handle"></div>
+		<article class="content dashboard-page">
+			<section class="section">
+				{% block content %}{% endblock %}
+			</section>
+		</article>
+	</div>
+</div>
+<div class="ref" id="ref">
+	<div class="color-primary"></div>
+	<div class="chart">
+		<div class="color-primary"></div>
+		<div class="color-secondary"></div>
+	</div>
+</div>
+<script type="text/javascript" src="{% static 'dist/js/vendor.js' %}"></script>
+<script type="text/javascript" src="{% static 'dist/js/app.js' %}"></script>
+{% block extra_js %}
+{% endblock %}
+</body>
+</html>

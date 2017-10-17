@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+	{% load static %}
+	<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+	<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block subtitle %}{{ form.get_title }}{% endblock %}
+
+{% block content %}
+	<div class="card">
+		<div class="card-block">
+			<form action="" method="POST" class="form">
+				{% csrf_token %}
+
+				<div class="form-group">
+					<label for="Title">Titre du chapitre</label>
+					<input name="title" type="text" class="form-control" id="Title" aria-describedby="Title" placeholder="..." value="{% if form.title.value %}{{ form.title.value }}{% endif %}">
+					<small id="Title" class="form-text text-muted">{{ form.title.help_text }}</small>
+				</div>
+
+				<div class="card sameheight-item">
+					<div class="card-block">
+						<div class="card-title-block">
+							<h3 class="title"> Cours </h3>
+						</div>
+						<ul class="nav nav-tabs nav-tabs-bordered">
+							<li class="nav-item">
+								<a href="#content" class="nav-link active" data-target="#content" data-toggle="tab" aria-controls="content" role="tab">Cours</a>
+							</li>
+							<li class="nav-item">
+								<a href="#example" class="nav-link" data-target="#example" aria-controls="example" data-toggle="tab" role="tab">Exemples</a>
+							</li>
+							<li class="nav-item">
+								<a href="notes" class="nav-link" data-target="#notes" aria-controls="notes" data-toggle="tab" role="tab">Notes complémentaires</a>
+							</li>
+						</ul>
+						<div class="tab-content tabs-bordered">
+							<div class="tab-pane fade in active show" id="content">
+								<div class="form-group">
+									<div class="col">
+										{{ form.content }}
+									</div>
+									<small id="Content" class="form-text text-muted">{{ form.content.help_text }}</small>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="example">
+								<div class="form-group">
+									<div class="col">
+										{{ form.example }}
+									</div>
+									<small id="Example" class="form-text text-muted">{{ form.example.help_text }}</small>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="notes">
+								<div class="form-group">
+									<div class="col">
+										{{ form.note }}
+									</div>
+									<small id="Notes" class="form-text text-muted">{{ form.note.help_text }}</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12" style="text-align: center;">
+						<a class="btn btn-danger" href="/">Annuler</a>
+						<input class="btn btn-primary" type="submit" name="">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}Supprimer "{{ object.name }}" {% endblock %}
+
+{% block content %}
+<div class="card">
+	<div class="card-block">
+		<div class="card-title">
+			<h3>Suppression de "{{ object.name }}" </h3>
+		</div>
+		<form action="" method="POST" class="form">
+			{% csrf_token %}
+			<p>Confirmer la suppression de la discipline: "{{ object.name }}" </p>
+			<p><u>Attention:</u> si vous supprimez cette discipline vous supprimerais tous les documents qui y sont associés !</p>
+			<div class="row">
+				<div class="col-12" style="text-align: center;">
+					<a class="btn btn-danger" href="/">Annuler</a>
+					<input type="submit" class="btn btn-primary">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

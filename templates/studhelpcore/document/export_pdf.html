@@ -1,0 +1,24 @@
+{% extends "studhelpcore/base_pdf.html" %}
+
+{% block extra_style %}
+    <style type="text/css">
+        body {
+            font-family: "Helvetica", "sans-serif";
+            color: #333333;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <div class="main">
+            <h1>{{ title }}</h1>
+            <p>{{ description }} </p>
+        </div>
+    </div>
+    {% for chapter in content %}
+        <h2>{{ chapter.title }}</h2>
+        <div>{{ chapter.content|safe }}</div>
+        <hr>
+    {% endfor %}
+{% endblock %}

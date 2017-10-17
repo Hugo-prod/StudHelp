@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}{{ object.title }}{% endblock %}
+
+{% block sidebar %}
+<li class="active open">
+	<a href="">
+		<i class="fa fa-file-text-o"></i> {{ object.title }}
+		<i class="fa arrow"></i>
+	</a>
+	<ul class="sidebar-nav">
+		<li>
+			<a href="{% url 'core:update_document' object.pk %}">
+				<i class="fa fa-pencil-square-o"></i> Modifier </a>
+		</li>
+		<li>
+			<a href="{% url 'core:delete_document' object.pk %}">
+				<i class="fa fa-times"></i> Supprimer </a>
+		</li>
+
+		<li>
+			<a href="#">
+				<i class="fa fa-anchor"></i>  Chapitres 
+				<i class="fa arrow"></i>
+			</a>
+			<ul class="sidebar-nav">
+				{% for chapter in object.get_chapters %}
+					<li><a href="#{{ chapter.title|slugify }}">{{ forloop.counter }}. {{ chapter.title }}</a></li>
+				{% empty %}
+					<li><a href="{% url 'core:create_chapter' object.pk %}">Créer un chapitre</a></li>
+				{% endfor %}
+			</ul>
+		</li>
+	</ul>
+</li>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+	<div class="row sameheight-container">
+		<div class="col">
+			<div class="card sameheight-item stats" data-exclude="xs">
+				<div class="card-block">
+					<div class="title-block">
+						<div class="row">
+							<div class="col">
+								<h4 class="title"> Document {{ object.title }} </h4>
+								<p class="title-description">{{ object.description }}</p>
+							</div>
+							<div class="col">
+								<div class="text-right">
+									<a class="btn btn-sm btn-info" href="{% url 'core:document_to_pdf' object.pk %}" style="color: white;">Exporter en PDF</a>
+									<a class="btn btn-sm btn-primary" href="{% url 'core:create_chapter' object.pk %}">Créer un chapitre</a>
+									<a class="btn btn-sm btn-warning" href="{% url 'core:update_document' object.pk %}" style="color: white;">Modifier</a>
+									<a class="btn btn-sm btn-danger" href="{% url 'core:delete_document' object.pk %}">Supprimer</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row row-sm">
+						<ul>
+							<li>Créé le: {{ object.created_date }}</li>
+							{% if object.update_date %}
+								<li>Dernière modification: {{ object.update_date }}</li>
+							{% endif %}
+							<li>Nombre de chapitre: {{ object.get_nb_chapters }}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% for chapter in object.get_chapters %}
+	<section class="section" id="{{ chapter.title|slugify }}">
+		<div class="row sameheight-container">
+			<div class="col">
+				<div class="card sameheight-item stats" data-exclude="xs">
+					<div class="card-block">
+						<div class="title-block">
+							<div class="row">
+								<div class="col">
+									<h4 class="title">{{ forloop.counter }}. {{ chapter.title }} </h4>
+								</div>
+								<div class="col">
+									<div class="text-right">
+										<a class="btn btn-sm btn-warning" href="{% url 'core:update_chapter' chapter.pk %}" style="color: white;">Modifier</a>
+										<a class="btn btn-sm btn-danger" href="{% url 'core:delete_chapter' chapter.pk %}">Supprimer</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<ul class="nav nav-tabs nav-tabs-bordered">
+							<li class="nav-item">
+								<a href="#content" class="nav-link active" data-target="#content" data-toggle="tab" aria-controls="content" role="tab">Chapitre</a>
+							</li>
+							{% if chapter.example %}
+							<li class="nav-item">
+								<a href="#example" class="nav-link" data-target="#example" aria-controls="example" data-toggle="tab" role="tab">Exemples</a>
+							</li>
+							{% endif %}
+							{% if chapter.note %}
+							<li class="nav-item">
+								<a href="notes" class="nav-link" data-target="#notes" aria-controls="notes" data-toggle="tab" role="tab">Notes complémentaires</a>
+							</li>
+							{% endif %}
+						</ul>
+						<div class="tab-content tabs-bordered">
+							<div class="tab-pane fade in active show" id="content">
+								<div class="col">
+									{{ chapter.content|safe }}
+								</div>
+							</div>
+							{% if chapter.example %}
+							<div class="tab-pane fade" id="example">
+								<div class="col">
+									{{ chapter.example|safe }}
+								</div>
+							</div>
+							{% endif %}
+							{% if chapter.note %}
+							<div class="tab-pane fade" id="notes">
+								<div class="col">
+									{{ chapter.note|safe }}
+								</div>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}Supprimer "{{ object.title }}" {% endblock %}
+
+{% block content %}
+<div class="card">
+	<div class="card-block">
+		<div class="card-title">
+			<h3>Suppression de "{{ object.title }}" </h3>
+		</div>
+		<form action="" method="POST" class="form">
+			{% csrf_token %}
+			<p>Confirmer la suppression du cours: "{{ object.title }}" </p>
+			<div class="row">
+				<div class="col-12" style="text-align: center;">
+					<a class="btn btn-danger" href="/">Annuler</a>
+					<input type="submit" class="btn btn-primary">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}
